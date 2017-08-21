@@ -6,5 +6,8 @@
 <style>
     @import "../static/css/main.css";
     @import "../static/css/color-dark.css";     /*深色主题*/
+    body {
+      font-family: "PingFangSC-Light", "Helvetica Neue", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+    }
     /*@import "../static/css/theme-green/color-green.css";   浅绿色主题*/
 </style>

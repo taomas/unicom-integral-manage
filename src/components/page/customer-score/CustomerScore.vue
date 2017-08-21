@@ -4,7 +4,6 @@
       <div class="title">您的个人积分</div>
       <p class="score-number" id="count-up">1,0000</p>
     </div>
-  
   </div>
 </template>
 
