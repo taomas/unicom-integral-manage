@@ -3,6 +3,11 @@ import Router from 'vue-router'
 import * as api from '../api/index'
 
 Vue.use(Router);
+import Home from '../components/common/Home.vue'
+import Login from '../components/page/Login.vue'
+import CustomerScore from '../components/page/CustomerScore.vue'
+import ResetPassword from '../components/page/ResetPassword.vue'
+import UserManage from '../components/page/UserManage.vue'
 
 let router = new Router({
   routes: [{
@@ -11,7 +16,7 @@ let router = new Router({
     },
     {
       path: '/readme',
-      component: resolve => require(['../components/common/Home.vue'], resolve),
+      component: Home,
       children: [
         // {
         //   path: '/',
@@ -51,21 +56,21 @@ let router = new Router({
         // },
         {
           path: '/score',
-          component: resolve => require(['../components/page/CustomerScore.vue'], resolve)
+          component: CustomerScore
         },
         {
           path: '/reset-password',
-          component: resolve => require(['../components/page/ResetPassword.vue'], resolve)
+          component: ResetPassword
         },
         {
           path: '/user-manage',
-          component: resolve => require(['../components/page/UserManage.vue'], resolve)
+          component: UserManage
         }
       ]
     },
     {
       path: '/login',
-      component: resolve => require(['../components/page/Login.vue'], resolve)
+      component: Login
     }
   ]
 })
@@ -74,7 +79,7 @@ router.afterEach((to, from, next) => {
   if (!api.isCurrentUser() && to.path !== '/login'){
     setTimeout(() => {
       router.push({path: '/login'})
-    }, 1000)
+    }, 100)
   }
 })
 
