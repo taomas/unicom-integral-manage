@@ -1,13 +1,16 @@
 import AV from 'leancloud-storage'
 
-let config = {
-  appId: 'BOVWOFjF1IOefkuWVHHp6vJ9-gzGzoHsz',
-  appKey: 'OYXvjMkIRTVu1dI2bp5fELSq'
+const initLeancloud = () => {
+  let config = {
+    appId: 'BOVWOFjF1IOefkuWVHHp6vJ9-gzGzoHsz',
+    appKey: 'OYXvjMkIRTVu1dI2bp5fELSq'
+  }
+  AV.init({
+    ...config
+  })
 }
 
-AV.init({
-  ...config
-})
+initLeancloud()
 
 export const register = (username, password) => {
   let user = new AV.User()
@@ -24,23 +27,14 @@ export const loginout = () => {
   return AV.User.logOut()
 }
 
-const hasUserScore = async () => {
+const hasUserScore = async() => {
   let id = localStorage.getItem('objectId') || ''
   let query = new AV.Query('Product').equalTo('user', AV.Object.createWithoutData('User', id))
   let result = query.include('test')
-  console.log(result.toJSON())
 }
 
 export const initUserScore = () => {
   hasUserScore()
-  // let Product = AV.Object.extend('Product')
-  // let product = new Product({
-  //   score: 0,
-  //   user: AV.User.current()
-  // })
-  // return product.save().then(res => {
-  //   return res.toJSON()
-  // })
 }
 
 export const queryUserScore = () => {
