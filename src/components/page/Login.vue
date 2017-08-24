@@ -2,10 +2,10 @@
   <div class="login-wrap" id="js-login-particles">
     <div class="ms-title">联通积分系统</div>
     <div class="ms-login">
-      <!-- <el-tabs v-model="activeName">
+       <el-tabs v-model="activeName">
         <el-tab-pane label="登录" name="login"></el-tab-pane>
         <el-tab-pane label="注册" name="register"></el-tab-pane>
-      </el-tabs> -->
+      </el-tabs> 
       <div class="form-body">
         <div class="form-content" :style="{transform: translateX}">
           <div class="form-wrap">
