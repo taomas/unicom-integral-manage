@@ -60,6 +60,16 @@ export default {
         zip: 200333
       }]
     }
+  },
+  methods: {
+    handleClick() {
+    },
+    getUsers() {
+      this.$server.getAllUser()
+    }
+  },
+  created() {
+    this.getUsers()
   }
 }
 </script>

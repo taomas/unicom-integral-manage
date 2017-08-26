@@ -76,9 +76,9 @@ export default {
   methods: {
     evtUserLogin() {
       this.$server.login(this.loginUser.username, this.loginUser.password).then(res => {
-        let user = res.toJSON()
-        localStorage.setItem('objectId', user.objectId)
+        let user = res.result.user
         localStorage.setItem('username', user.username)
+        localStorage.setItem('role', user.role)
         this.$message({
           message: '恭喜你，登录成功！',
           type: 'success',
@@ -96,15 +96,16 @@ export default {
     },
     evtRegister() {
       this.$server.register(this.registerUser.username, this.registerUser.password).then(res => {
-        localStorage.setItem('username', this.registerUser.username)
-        this.$message({
-          message: '恭喜你，注册成功！',
-          type: 'success',
-          duration: '1000',
-          onClose: () => {
-            this.$router.push({ path: '/score' })
-          }
-        })
+        console.log(res)
+        // localStorage.setItem('username', this.registerUser.username)
+        // this.$message({
+        //   message: '恭喜你，注册成功！',
+        //   type: 'success',
+        //   duration: '1000',
+        //   onClose: () => {
+        //     this.$router.push({ path: '/score' })
+        //   }
+        // })
       }).catch(error => {
         this.$message({
           message: '用户名已存在！',
