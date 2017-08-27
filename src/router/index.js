@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from 'store'
 import * as api from '../api/index'
 
 Vue.use(Router);
@@ -76,7 +77,8 @@ let router = new Router({
 })
 
 router.afterEach((to, from, next) => {
-  if (!api.isCurrentUser() && to.path !== '/login'){
+  let isLogin = store.get('IS_LOGIN') || ''
+  if (!isLogin && to.path !== '/login'){
     setTimeout(() => {
       router.push({path: '/login'})
     }, 100)

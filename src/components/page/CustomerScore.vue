@@ -6,7 +6,7 @@
     <ul class="score-list ly-row-flex flex-space-between">
       <li class="score-item">
         <p class="score-number" id="score-person">
-          5
+          --
         </p>
         <p class="score-label">
           推荐人数
@@ -14,7 +14,7 @@
       </li>
       <li class="score-item">
         <p class="score-number" id="score-number">
-          2000
+          --
         </p>
         <p class="score-label">
           积分
@@ -22,7 +22,7 @@
       </li>
       <li class="score-item">
         <p class="score-number" id="score-add">
-          10
+          --
         </p>
         <p class="score-label">
           每日新增
@@ -30,8 +30,8 @@
       </li>
     </ul>
     <h2 class="table-title">积分奖励</h2>
-    <el-table :data="tableData" border style="width: 100%">
-      <el-table-column prop="date" label="日期">
+    <el-table :data="userScores" border style="width: 100%">
+      <el-table-column prop="time" label="日期">
       </el-table-column>
       <el-table-column prop="score" label="消费赠送额度积分奖励">
       </el-table-column>
@@ -44,33 +44,52 @@ import CountUp from 'countup.js'
 export default {
   data() {
     return {
-      tableData: [{
-        date: '今日',
-        score: '12'
-      }, {
-        date: '昨日',
-        score: '8'
-      }, {
-        date: '全部',
-        score: '2000'
-      }]
-
+      user: {
+        recommendCount: '--',
+        score: '--',
+        addScore: '--'
+      }
+    }
+  },
+  computed: {
+    userScores() {
+      let userScores = []
+      if (this.user) {
+        userScores = [{
+          time: '今日',
+          score: this.user.score
+        }, {
+          time: '昨日',
+          score: '8'
+        }, {
+          time: '全部',
+          score: this.user.totalScore
+        }]
+      }
+      return userScores
     }
   },
   methods: {
     evtCountup() {
-      this.handleCountup('score-person', 0, 5)
-      this.handleCountup('score-number', 0, 2000)
-      this.handleCountup('score-add', 0, 15)
+      this.handleCountup('score-person', 0, this.user.recommendCount)
+      this.handleCountup('score-number', 0, this.user.totalScore)
+      this.handleCountup('score-add', 0, this.user.score)
     },
     handleCountup(id, start, end, fixed) {
       let count = new CountUp(id, start, end)
       count.start()
+    },
+    getUserDetail() {
+      let uid = this.$storage.get('uid')
+      this.$server.getUserDetail(uid).then(user => {
+        this.user = user
+        this.evtCountup()
+      })
     }
   },
   mounted() {
     this.$nextTick(() => {
-      this.evtCountup()
+      this.getUserDetail()
     })
   }
 }

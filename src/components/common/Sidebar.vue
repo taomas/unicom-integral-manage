@@ -2,18 +2,20 @@
   <div class="sidebar">
     <el-menu :default-active="onRoutes" class="el-menu-vertical-demo" theme="dark" unique-opened router>
       <template v-for="item in items">
-        <template v-if="item.subs">
-          <el-submenu :index="item.index">
-            <template slot="title">
-              <i :class="item.icon"></i>{{ item.title }}</template>
-            <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index">{{ subItem.title }}
+        <template v-if="item.isShow">
+          <template v-if="item.subs">
+            <el-submenu :index="item.index">
+              <template slot="title">
+                <i :class="item.icon"></i>{{ item.title }}</template>
+              <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index">{{ subItem.title }}
+              </el-menu-item>
+            </el-submenu>
+          </template>
+          <template v-else>
+            <el-menu-item :index="item.index">
+              <i :class="item.icon"></i>{{ item.title }}
             </el-menu-item>
-          </el-submenu>
-        </template>
-        <template v-else>
-          <el-menu-item :index="item.index">
-            <i :class="item.icon"></i>{{ item.title }}
-          </el-menu-item>
+          </template>
         </template>
       </template>
     </el-menu>
@@ -28,67 +30,23 @@ export default {
         {
           icon: 'el-icon-setting',
           index: 'score',
-          title: '首页'
+          title: '首页',
+          isShow: true
         },
         {
           icon: 'el-icon-setting',
           index: 'reset-password',
-          title: '个人资料'
+          title: '个人资料',
+          isShow: true
         },
         {
           icon: 'el-icon-setting',
           index: 'user-manage',
-          title: '用户管理'
+          title: '用户管理',
+          isShow: this.$storage.get('role') === 'admin'
         }
-        // {
-        //   icon: 'el-icon-menu',
-        //   index: '2',
-        //   title: '管理',
-        //   subs: [
-        //     {
-        //       index: 'basetable',
-        //       title: '积分'
-        //     }
-        //     {
-        //         index: 'vuetable',
-        //         title: 'Vue表格组件'
-        //     }
-        //   ]
-        // }
-        // {
-        //     icon: 'el-icon-date',
-        //     index: '3',
-        //     title: '表单',
-        //     subs: [
-        //         {
-        //             index: 'baseform',
-        //             title: '基本表单'
-        //         },
-        //         {
-        //             index: 'vueeditor',
-        //             title: '编辑器'
-        //         },
-        //         {
-        //             index: 'markdown',
-        //             title: 'markdown'
-        //         },
-        //         {
-        //             index: 'upload',
-        //             title: '文件上传'
-        //         }
-        //     ]
-        // },
-        // {
-        //     icon: 'el-icon-star-on',
-        //     index: 'basecharts',
-        //     title: '图表'
-        // },
-        // {
-        //     icon: 'el-icon-upload2',
-        //     index: 'drag',
-        //     title: '拖拽'
-        // }
-      ]
+      ],
+      role: this.$storage.get('role') === 'admin'
     }
   },
   computed: {

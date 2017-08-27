@@ -12,12 +12,21 @@ const initLeancloud = () => {
 
 initLeancloud()
 
-export const register = (username, password) => {
+export const register = (params) => {
   let MyUser = AV
     .Object
     .extend('MyUser')
   let query = new AV.Query('MyUser')
   let user = new MyUser()
+  params = Object.assign({
+    username: 'admin',
+    password: '123456',
+    score: 0,
+    totalScore: 0,
+    recommendCount: 0,
+    addRecord: [],
+    role: 'admin'
+  }, params)
   return query
     .find()
     .then(users => {
@@ -25,7 +34,7 @@ export const register = (username, password) => {
       let registedUser = {}
       users.forEach(user => {
         let name = user.get('username')
-        if (name === username) {
+        if (name === params.username) {
           hasUser = true
           registedUser = user.toJSON()
         }
@@ -34,10 +43,20 @@ export const register = (username, password) => {
     })
     .then(res => {
       if (!res.hasUser) {
-        user.set('username', username)
-        user.set('password', password)
-        user.set('role', 'admin')
-        return Promise.resolve(user.save())
+        user.set('username', params.username)
+        user.set('password', params.password)
+        user.set('score', params.score)
+        user.set('totalScore', params.totalScore)
+        user.set('recommendCount', params.recommendCount)
+        user.set('role', params.role)
+        return user.save().then(res => {
+          return {
+            success: true,
+            result: {
+              user: res.toJSON()
+            }
+          }
+        })
       } else {
         return Promise.reject({
           success: false,
@@ -87,21 +106,57 @@ export const login = (username, password) => {
     })
 }
 
-export const loginout = () => {
-  return AV
-    .User
-    .logOut()
+export const deleteUser = (id) => {
+  let user = AV.Object.createWithoutData('MyUser', id)
+  return user.destroy()
+}
+
+export const getUserDetail = (id) => {
+  let query = new AV.Query('MyUser')
+  return query.get(id).then(res => {
+    return res.toJSON()
+  })
+}
+
+export const resetPassword = ({id = '', oldPassword = '', newPassword = ''}) => {
+  let query = new AV.Query('MyUser')
+  return query.get(id).then(user => {
+    let password = user.get('password')
+    if (password !== oldPassword) {
+      return Promise.reject({
+        success: false,
+        message: '原登录密码不正确'
+      })
+    } else {
+      user.set('password', newPassword)
+      return user.save()
+    }
+  })
+}
+
+export const saveUserDetail = (detail) => {
+  let query = new AV.Query('MyUser')
+  console.log(detail)
+  let id = detail.id
+  return query.get(id).then(user => {
+    user.set('username', detail.username)
+    user.set('password', detail.password)
+    user.set('recommendCount', detail.recommendCount),
+    user.set('score', detail.score)
+    user.set('totalScore', detail.totalScore)
+    user.set('role', detail.role)
+    return user.save()
+  })
 }
 
 export const getAllUser = () => {
-  let query = new AV.Query('_User')
-  let now = new Date()
-  query.lessThanOrEqualTo('createdAt', now)
-  return query
-    .count()
-    .then(count => {
-      console.log(count)
+  let query = new AV.Query('MyUser')
+  return query.find().then(res => {
+    let users = res.map(user => {
+      return user.toJSON()
     })
+    return users
+  })
 }
 
 const hasUserScore = async() => {

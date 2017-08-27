@@ -2,10 +2,6 @@
   <div class="login-wrap" id="js-login-particles">
     <div class="ms-title">联通积分系统</div>
     <div class="ms-login">
-       <el-tabs v-model="activeName">
-        <el-tab-pane label="登录" name="login"></el-tab-pane>
-        <el-tab-pane label="注册" name="register"></el-tab-pane>
-      </el-tabs> 
       <div class="form-body">
         <div class="form-content" :style="{transform: translateX}">
           <div class="form-wrap">
@@ -77,8 +73,10 @@ export default {
     evtUserLogin() {
       this.$server.login(this.loginUser.username, this.loginUser.password).then(res => {
         let user = res.result.user
-        localStorage.setItem('username', user.username)
-        localStorage.setItem('role', user.role)
+        this.$storage.set('username', user.username)
+        this.$storage.set('role', user.role)
+        this.$storage.set('uid', user.objectId)
+        this.$storage.set('IS_LOGIN', true)
         this.$message({
           message: '恭喜你，登录成功！',
           type: 'success',
@@ -96,16 +94,18 @@ export default {
     },
     evtRegister() {
       this.$server.register(this.registerUser.username, this.registerUser.password).then(res => {
-        console.log(res)
-        // localStorage.setItem('username', this.registerUser.username)
-        // this.$message({
-        //   message: '恭喜你，注册成功！',
-        //   type: 'success',
-        //   duration: '1000',
-        //   onClose: () => {
-        //     this.$router.push({ path: '/score' })
-        //   }
-        // })
+        let user = res.result.user
+        this.$storage.set('username', user.username)
+        this.$storage.set('role', user.role)
+        this.$storage.set('IS_LOGIN', true)
+        this.$message({
+          message: '恭喜你，注册成功！',
+          type: 'success',
+          duration: '1000',
+          onClose: () => {
+            this.$router.push({ path: '/score' })
+          }
+        })
       }).catch(error => {
         this.$message({
           message: '用户名已存在！',
