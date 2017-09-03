@@ -71,4 +71,10 @@ export default {
 .sidebar>ul {
   height: 100%;
 }
+
+@media screen and (max-width: 750px) {
+  .sidebar {
+    display: none;
+  }
+}
 </style>

@@ -22,6 +22,8 @@ export const register = (params) => {
     username: 'admin',
     password: '123456',
     score: 0,
+    yesterdayScore: 0,
+    todayScore: 0,
     totalScore: 0,
     recommendCount: 0,
     addRecord: [],
@@ -46,6 +48,8 @@ export const register = (params) => {
         user.set('username', params.username)
         user.set('password', params.password)
         user.set('score', params.score)
+        user.set('yesterdayScore', params.yesterdayScore)
+        user.set('todayScore', params.todayScore)
         user.set('totalScore', params.totalScore)
         user.set('recommendCount', params.recommendCount)
         user.set('role', params.role)
@@ -136,15 +140,33 @@ export const resetPassword = ({id = '', oldPassword = '', newPassword = ''}) => 
 
 export const saveUserDetail = (detail) => {
   let query = new AV.Query('MyUser')
-  console.log(detail)
   let id = detail.id
   return query.get(id).then(user => {
     user.set('username', detail.username)
     user.set('password', detail.password)
-    user.set('recommendCount', detail.recommendCount),
-    user.set('score', detail.score)
+    user.set('recommendCount', detail.recommendCount)
+    user.set('yesterdayScore', detail.yesterdayScore)
+    user.set('todayScore', detail.todayScore)
     user.set('totalScore', detail.totalScore)
     user.set('role', detail.role)
+    user.set('name', detail.name)
+    user.set('gender', detail.gender)
+    user.set('birth', detail.birth)
+    user.set('address', detail.address)
+    user.set('idcard', detail.idcard)
+    return user.save()
+  })
+}
+
+export const saveUserIdcard = (detail) => {
+  let query = new AV.Query('MyUser')
+  let id = detail.id
+  return query.get(id).then(user => {
+    user.set('name', detail.name)
+    user.set('gender', detail.gender)
+    user.set('birth', detail.birth)
+    user.set('address', detail.address)
+    user.set('idcard', detail.idcard)
     return user.save()
   })
 }
@@ -159,36 +181,67 @@ export const getAllUser = () => {
   })
 }
 
-const hasUserScore = async() => {
-  let id = localStorage.getItem('objectId') || ''
-  let query = new AV
-    .Query('Product')
-    .equalTo('user', AV.Object.createWithoutData('User', id))
-  let result = query.include('test')
-}
-
-export const initUserScore = () => {
-  hasUserScore()
-}
-
-export const queryUserScore = () => {
-  let id = localStorage.getItem('objectId') || ''
-  let query = new AV
-    .Query('Product')
-    .equalTo('user', AV.Object.createWithoutData('User', id))
-  return query
-    .find()
-    .then(res => {
-      return res
+export const searchUser = (username) => {
+  let query = new AV.Query('MyUser')
+  query.equalTo('username', username)
+  return query.find().then(res => {
+    let users = res.map(user => {
+      return user.toJSON()
     })
+    return users
+  })
 }
 
-export const isCurrentUser = () => {
-  let currentUser = AV
-    .User
-    .current()
-  if (currentUser) {
-    return true
-  }
-  return false
+export const addScore = (score, baseScore) => {
+  let query = new AV.Query('MyUser')
+  return query.find().then(users => {
+    let lastTime = ''
+    let date = new Date()
+    let year = date.getFullYear()
+    let mouth = date.getMonth() + 1
+    let day = date.getDate()
+    mouth = mouth <= 9 ? `0${mouth}` : mouth
+    day = day <= 9 ? `0${day}` : day
+    let newUpdateTime = `${year}-${mouth}-${day}`
+    users.forEach(user => {
+      if (!lastTime) {
+        lastTime = user.get('updateTime')
+      }
+      let totalScore = user.get('totalScore')
+      let recommendCount = user.get('recommendCount')
+      let todayScore = user.get('todayScore')
+      let updateScore = +score + recommendCount * baseScore
+      let resultScore = updateScore + totalScore
+      if (todayScore) {
+        user.set('yesterdayScore', todayScore)
+      }
+      user.set('updateTime', newUpdateTime)
+      user.set('todayScore', updateScore)
+      user.set('totalScore', resultScore)
+    })
+    console.log(newUpdateTime, lastTime)
+    if (newUpdateTime.replace(/-/g, '') - lastTime.replace(/-/g, '') < 1) {
+      return Promise.reject({
+        success: false,
+        message: '新增积分间隔时间需要超过一天',
+        result: {}
+      })
+    } else {
+      return AV.Object.saveAll(users)
+    }
+  })
+}
+
+export const addParams = () => {
+  let query = new AV.Query('MyUser')
+  return query.find().then(users => {
+    users.forEach(user => {
+      user.set('name', '')
+      user.set('gender', '男')
+      user.set('birth', '1887-02-01')
+      user.set('address', '')
+      user.set('idcard', '')
+    })
+    return AV.Object.saveAll(users)
+  })
 }

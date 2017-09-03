@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <div class="logo">后台管理系统</div>
+    <div class="logo">积分管理系统</div>
     <div class="user-info">
       <el-dropdown trigger="click" @command="handleCommand">
         <span class="el-dropdown-link">
@@ -80,5 +80,27 @@ export default {
 
 .el-dropdown-menu__item {
   text-align: center;
+}
+
+@media screen and (max-width: 750px) {
+  .header {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 70px;
+    font-size: 16px;
+    z-index: 100;
+  }
+  .header .logo {
+    box-sizing: border-box;
+    padding-left: 15px;
+    width: 100px;
+    height: 70px;
+    white-space: nowrap;
+  }
+  .user-info {
+    padding-right: 15px;
+  }
 }
 </style>

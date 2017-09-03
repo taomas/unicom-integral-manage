@@ -1,10 +1,16 @@
 <template>
-  <div class="edit-user">
+  <div class="add-user">
     <el-button type="text" @click="dialogFormVisible = true" size="small">编辑</el-button>
-    <el-dialog title="编辑用户" v-model="dialogFormVisible">
-      <el-form class="form-edit" :model="user">
-        <el-form-item label="用户名" :label-width="formLabelWidth">
+    <el-dialog title="绑定信息" v-model="dialogFormVisible">
+      <el-form :model="user">
+        <el-form-item label="姓名" :label-width="formLabelWidth">
           <el-input v-model="user.username" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="性别" :label-width="formLabelWidth">
+          <el-select v-model="user.role" placeholder="请选择账户类型">
+            <el-option label="男" value="admin"></el-option>
+            <el-option label="女" value="user"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="密码" :label-width="formLabelWidth">
           <el-input v-model="user.password" auto-complete="off"></el-input>
@@ -28,22 +34,22 @@
           </el-select>
         </el-form-item>
         <el-form-item label="真实姓名" :label-width="formLabelWidth">
-          <el-input v-model="user.name" auto-complete="off"></el-input>
+          <el-input v-model="user.totalScore" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="性别" :label-width="formLabelWidth">
-          <el-select v-model="user.gender" placeholder="请选择性别">
+          <el-select v-model="user.role" placeholder="请选择账户类型">
             <el-option label="男" value="male"></el-option>
             <el-option label="女" value="female"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="地址" :label-width="formLabelWidth">
-          <el-input v-model="user.address" auto-complete="off"></el-input>
+          <el-input v-model="user.totalScore" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="生日" :label-width="formLabelWidth">
-          <el-input v-model="user.birth" auto-complete="off"></el-input>
+          <el-input v-model="user.totalScore" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="身份证号" :label-width="formLabelWidth">
-          <el-input v-model="user.idcard" auto-complete="off"></el-input>
+          <el-input v-model="user.totalScore" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -74,16 +80,14 @@ export default {
     handleConfirm() {
       let params = {
         id: this.user.objectId,
-        ...this.user
-        // username: this.user.username,
-        // password: this.user.password,
-        // recommendCount: this.user.recommendCount,
-        // yesterdayScore: this.user.yesterdayScore,
-        // todayScore: this.user.todayScore,
-        // totalScore: this.user.totalScore,
-        // role: this.user.role
+        username: this.user.username,
+        password: this.user.password,
+        recommendCount: this.user.recommendCount,
+        yesterdayScore: this.user.yesterdayScore,
+        todayScore: this.user.todayScore,
+        totalScore: this.user.totalScore,
+        role: this.user.role
       }
-      console.log(params)
       Object.keys(params).forEach(key => {
         if (!isNaN(+params[key]) && ['username', 'password'].indexOf(key) === -1) {
           params[key] = +params[key]
@@ -109,23 +113,6 @@ export default {
 </script>
 
 
-<style>
-.form-edit {
-  width: 100%;
-  height: 450px;
-  overflow: scroll;
-}
-.el-dialog__wrapper {
-  background: rgba(0, 0, 0, 0.5);
-}
-.v-modal {
-  display: none;
-}
-/*.el-dialog__wrapper {
-  background: rgba(0, 0, 0, 0.5);
-}
-.v-modal {
-  display: none;
-}*/
+<style scoped>
 </style>
 

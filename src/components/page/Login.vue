@@ -1,6 +1,6 @@
 <template>
   <div class="login-wrap" id="js-login-particles">
-    <div class="ms-title">联通积分系统</div>
+    <div class="ms-title">积分管理系统</div>
     <div class="ms-login">
       <div class="form-body">
         <div class="form-content" :style="{transform: translateX}">
@@ -14,19 +14,6 @@
               </el-form-item>
               <div class="login-btn">
                 <el-button type="primary" @click="evtUserLogin">登录</el-button>
-              </div>
-            </el-form>
-          </div>
-          <div class="form-wrap">
-            <el-form :model="registerUser" :rules="rules" label-width="0px" class="demo-ruleForm">
-              <el-form-item prop="username">
-                <el-input v-model="registerUser.username" placeholder="用户名"></el-input>
-              </el-form-item>
-              <el-form-item prop="password">
-                <el-input type="password" placeholder="密码" v-model="registerUser.password"></el-input>
-              </el-form-item>
-              <div class="login-btn">
-                <el-button type="primary" @click="evtRegister">注册</el-button>
               </div>
             </el-form>
           </div>
@@ -143,10 +130,11 @@ export default {
 }
 
 .ms-login {
+  box-sizing: border-box;
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 300px;
+  width: 340px;
   height: auto;
   padding: 40px;
   border-radius: 5px;
@@ -165,13 +153,13 @@ export default {
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: flex-start;
-  width: 600px;
+  width: 100%;
   height: auto;
   transition: all 0.3s;
 }
 
 .form-wrap {
-  width: 300px;
+  width: 100%;
   height: auto;
 }
 
@@ -210,5 +198,15 @@ export default {
 .slide-right-leave-to {
   transform: translate3d(100%, 0, 0);
   opacity: 0;
+}
+
+@media screen and (max-width: 750px) {
+  .ms-login {
+    width: 80%;
+  }
+  .form-wrap {
+    width: 100%;
+    height: auto;
+  }
 }
 </style>

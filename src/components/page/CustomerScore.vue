@@ -57,10 +57,10 @@ export default {
       if (this.user) {
         userScores = [{
           time: '今日',
-          score: this.user.score
+          score: this.user.todayScore
         }, {
           time: '昨日',
-          score: '8'
+          score: this.user.yesterdayScore
         }, {
           time: '全部',
           score: this.user.totalScore
@@ -73,7 +73,7 @@ export default {
     evtCountup() {
       this.handleCountup('score-person', 0, this.user.recommendCount)
       this.handleCountup('score-number', 0, this.user.totalScore)
-      this.handleCountup('score-add', 0, this.user.score)
+      this.handleCountup('score-add', 0, this.user.todayScore)
     },
     handleCountup(id, start, end, fixed) {
       let count = new CountUp(id, start, end)
@@ -97,8 +97,6 @@ export default {
 
 <style scoped>
 @import '../../assets/css/layout.css';
-
-.customer-score {}
 
 .score-title {
   width: 100%;
@@ -139,5 +137,19 @@ h2 {
   font-size: 18px;
   color: #324157;
   text-align: center;
+}
+
+@media screen and (max-width: 750px) {
+  .score-title {
+    font-size: 20px;
+    text-align: center;
+  }
+  .score-list {
+    justify-content: center;
+  }
+  .score-list .score-item {
+    width: 80%;
+    margin-top: 10px;
+  }
 }
 </style>
