@@ -1,5 +1,20 @@
 import AV from 'leancloud-storage'
 
+// user.set('username', detail.username)
+// user.set('password', detail.password)
+// user.set('buyTimes', detail.buyTimes)
+// user.set('recommendCount', detail.recommendCount)
+// user.set('yesterdayScore', detail.yesterdayScore)
+// user.set('todayScore', detail.todayScore)
+// user.set('actualScore', detail.actualScore)
+// user.set('totalScore', detail.totalScore)
+// user.set('role', detail.role)
+// user.set('name', detail.name)
+// user.set('gender', detail.gender)
+// user.set('birth', detail.birth)
+// user.set('address', detail.address)
+// user.set('idcard', detail.idcard)
+
 const initLeancloud = () => {
   let config = {
     appId: 'BOVWOFjF1IOefkuWVHHp6vJ9-gzGzoHsz',
@@ -20,14 +35,22 @@ export const register = (params) => {
   let user = new MyUser()
   params = Object.assign({
     username: 'admin',
-    password: '123456',
+    password: '',
+    buyTimes: 0,
+    recommendCount: 0,
     score: 0,
     yesterdayScore: 0,
     todayScore: 0,
+    actualScore: 0,
     totalScore: 0,
-    recommendCount: 0,
     addRecord: [],
-    role: 'admin'
+    role: 'admin',
+    name: '',
+    gender: '',
+    birth: '',
+    address: '',
+    idcard: 0,
+    updateTime: '0'
   }, params)
   return query
     .find()
@@ -47,12 +70,18 @@ export const register = (params) => {
       if (!res.hasUser) {
         user.set('username', params.username)
         user.set('password', params.password)
-        user.set('score', params.score)
+        user.set('buyTimes', params.buyTimes)
+        user.set('recommendCount', params.recommendCount)
         user.set('yesterdayScore', params.yesterdayScore)
         user.set('todayScore', params.todayScore)
+        user.set('actualScore', params.actualScore)
         user.set('totalScore', params.totalScore)
-        user.set('recommendCount', params.recommendCount)
         user.set('role', params.role)
+        user.set('name', params.name)
+        user.set('gender', params.gender)
+        user.set('birth', params.birth)
+        user.set('address', params.address)
+        user.set('idcard', params.idcard)
         return user.save().then(res => {
           return {
             success: true,
@@ -144,9 +173,11 @@ export const saveUserDetail = (detail) => {
   return query.get(id).then(user => {
     user.set('username', detail.username)
     user.set('password', detail.password)
+    user.set('buyTimes', detail.buyTimes)
     user.set('recommendCount', detail.recommendCount)
     user.set('yesterdayScore', detail.yesterdayScore)
     user.set('todayScore', detail.todayScore)
+    user.set('actualScore', detail.actualScore)
     user.set('totalScore', detail.totalScore)
     user.set('role', detail.role)
     user.set('name', detail.name)
@@ -202,25 +233,31 @@ export const addScore = (score, baseScore) => {
     let day = date.getDate()
     mouth = mouth <= 9 ? `0${mouth}` : mouth
     day = day <= 9 ? `0${day}` : day
-    let newUpdateTime = `${year}-${mouth}-${day}`
+    let newUpdateTime = `${year}${mouth}${day}`
     users.forEach(user => {
       if (!lastTime) {
         lastTime = user.get('updateTime')
       }
       let totalScore = user.get('totalScore')
+      let actualScore = user.get('actualScore')
       let recommendCount = user.get('recommendCount')
+      let buyTimes = user.get('buyTimes')
       let todayScore = user.get('todayScore')
-      let updateScore = +score + recommendCount * baseScore
-      let resultScore = updateScore + totalScore
+      let updateScore = buyTimes * score + recommendCount * baseScore
+      if (totalScore < updateScore) {
+        updateScore = totalScore
+      }
       if (todayScore) {
         user.set('yesterdayScore', todayScore)
       }
+      let updateActualScore = actualScore + updateScore
+      let updateTotalScore = totalScore - updateScore
       user.set('updateTime', newUpdateTime)
       user.set('todayScore', updateScore)
-      user.set('totalScore', resultScore)
+      user.set('actualScore', updateActualScore)
+      user.set('totalScore', updateTotalScore)
     })
-    console.log(newUpdateTime, lastTime)
-    if (newUpdateTime.replace(/-/g, '') - lastTime.replace(/-/g, '') < 1) {
+    if (newUpdateTime - lastTime < 1) {
       return Promise.reject({
         success: false,
         message: '新增积分间隔时间需要超过一天',
@@ -236,11 +273,7 @@ export const addParams = () => {
   let query = new AV.Query('MyUser')
   return query.find().then(users => {
     users.forEach(user => {
-      user.set('name', '')
-      user.set('gender', '男')
-      user.set('birth', '1887-02-01')
-      user.set('address', '')
-      user.set('idcard', '')
+      user.set('updateTime', '0')
     })
     return AV.Object.saveAll(users)
   })

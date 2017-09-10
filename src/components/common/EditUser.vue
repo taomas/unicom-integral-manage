@@ -12,11 +12,17 @@
         <el-form-item label="推荐人数" :label-width="formLabelWidth">
           <el-input v-model="user.recommendCount" auto-complete="off"></el-input>
         </el-form-item>
+        <el-form-item label="购买次数" :label-width="formLabelWidth">
+          <el-input v-model="user.buyTimes" auto-complete="off"></el-input>
+        </el-form-item>
         <el-form-item label="昨日新增" :label-width="formLabelWidth">
           <el-input v-model="user.yesterdayScore" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="今日新增" :label-width="formLabelWidth">
           <el-input v-model="user.todayScore" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="可用积分" :label-width="formLabelWidth">
+          <el-input v-model="user.actualScore" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="总积分" :label-width="formLabelWidth">
           <el-input v-model="user.totalScore" auto-complete="off"></el-input>
@@ -83,7 +89,6 @@ export default {
         // totalScore: this.user.totalScore,
         // role: this.user.role
       }
-      console.log(params)
       Object.keys(params).forEach(key => {
         if (!isNaN(+params[key]) && ['username', 'password'].indexOf(key) === -1) {
           params[key] = +params[key]

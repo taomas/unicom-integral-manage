@@ -1,9 +1,9 @@
 <template>
   <div class="add-user">
     <el-button type="primary" @click="dialogFormVisible = true">新增积分</el-button>
-    <el-dialog title="新增用户" v-model="dialogFormVisible">
+    <el-dialog title="新增积分" v-model="dialogFormVisible">
       <el-form>
-        <el-form-item label="新增积分" :label-width="formLabelWidth">
+        <el-form-item label="消费基数" :label-width="formLabelWidth">
           <el-input v-model="score" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="推荐基数" :label-width="formLabelWidth">
@@ -36,11 +36,11 @@ export default {
       this.dialogFormVisible = false
     },
     handleConfirm() {
-      if (isNaN(+this.score) || this.score > 1000 || this.score < 10) {
-        return this.$message('每日新增积分范围为10到1000分')
+      if (isNaN(+this.score) || this.score > 20 || this.score < 0) {
+        return this.$message('购买基数范围为0到20')
       }
-      if (isNaN(+this.score) || this.baseScore > 50 || this.baseScore <= 0) {
-        return this.$message('推荐基数范围为0到50')
+      if (isNaN(+this.baseScore) || this.baseScore > 20 || this.baseScore <= 0) {
+        return this.$message('推荐基数范围为0到20')
       }
       // this.evtAddParams()
       this.$server.addScore(this.score, this.baseScore).then(res => {

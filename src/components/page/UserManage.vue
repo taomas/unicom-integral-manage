@@ -21,9 +21,13 @@
       </el-table-column>
       <el-table-column prop="recommendCount" label="推荐人数" width="120">
       </el-table-column>
+      <el-table-column prop="buyTimes" label="购买产品次数" width="120">
+      </el-table-column>
       <el-table-column prop="yesterdayScore" label="昨日新增" width="120">
       </el-table-column>
       <el-table-column prop="todayScore" label="今日新增" width="120">
+      </el-table-column>
+      <el-table-column prop="actualScore" label="可用积分" width="120">
       </el-table-column>
       <el-table-column prop="totalScore" label="总积分" width="120">
       </el-table-column>

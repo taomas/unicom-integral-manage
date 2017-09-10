@@ -1,6 +1,6 @@
 <template>
   <div class="login-wrap" id="js-login-particles">
-    <div class="ms-title">积分管理系统</div>
+    <div class="ms-title">仟嘉利健康商城</div>
     <div class="ms-login">
       <div class="form-body">
         <div class="form-content" :style="{transform: translateX}">

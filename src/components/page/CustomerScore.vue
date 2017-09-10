@@ -17,7 +17,7 @@
           --
         </p>
         <p class="score-label">
-          积分
+          可用积分
         </p>
       </li>
       <li class="score-item">
@@ -25,7 +25,7 @@
           --
         </p>
         <p class="score-label">
-          每日新增
+          总积分
         </p>
       </li>
     </ul>
@@ -62,8 +62,8 @@ export default {
           time: '昨日',
           score: this.user.yesterdayScore
         }, {
-          time: '全部',
-          score: this.user.totalScore
+          time: '全部可用积分',
+          score: this.user.actualScore
         }]
       }
       return userScores
@@ -72,8 +72,8 @@ export default {
   methods: {
     evtCountup() {
       this.handleCountup('score-person', 0, this.user.recommendCount)
-      this.handleCountup('score-number', 0, this.user.totalScore)
-      this.handleCountup('score-add', 0, this.user.todayScore)
+      this.handleCountup('score-number', 0, this.user.actualScore)
+      this.handleCountup('score-add', 0, this.user.totalScore)
     },
     handleCountup(id, start, end, fixed) {
       let count = new CountUp(id, start, end)
